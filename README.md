@@ -21,3 +21,9 @@
   - ESLint
   - husky
 - CI/CD: GitHub Actions
+
+## 開発者メモ
+
+### Next.js
+
+-
