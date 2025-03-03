@@ -1,0 +1,38 @@
+## volumes
+# - ホストとコンテナ間でファイルやディレクトリを共有したり、コンテナ内に永続的なデータ領域を作ったりするための仕組み
+# - ホスト側の packages/backend ディレクトリ全体を、コンテナ内の /app にマウント
+#   - ホスト側の packages/backend を コンテナ側の /app に取り込む
+#   - ソースコードの共有: ホスト側で編集したコードが、即座にコンテナに反映される
+#   - 双方向同期: コンテナ内での変更(生成ファイルなど)も、ホスト側に反映される
+##
+
+## working_dir
+# - コンテナ内での作業ディレクトリを指定
+# - コンテナ内でコマンドを実行する際の「カレントディレクトリ」
+#   - 例えば、command で実行されるシェルコマンドは working_dir で指定したディレクトリを基準に動作
+##
+
+## command
+# - コンテナ起動時に実行するコマンドを指定
+# - 例: /bin/sh -c "pnpm i && pnpm run dev"
+#   - /bin/sh -c: シェルスクリプトを実行するための構文
+#     - -c: 後ろに続く文字列をコマンドとして実行
+#   - pnpm i: パッケージのインストール
+#   - &&: 前のコマンドが成功した場合にのみ、次のコマンドを実行
+#   - pnpm run dev: 開発用サーバーの起動
+#     - ts-node-dev: ファイルの変更を検知、プロセスを再起動して、最新のコードでサーバーを動かし続ける仕組み
+#       - --respawn: デフォルトの再起動では、場合によっては前のプロセスの状態が一部残ってしまうので、再起動時に前のプロセスを完全に終了し、新しいプロセスを新たに生成
+#       - --transpile-only: TypeScript の型チェックを無効化して高速化(実際の型エラーは無視)
+##
+
+services:
+  backend:
+    # build: packages/backend  # packages/backendのDockerfileを使ってイメージをビルド
+    image: node:20
+    working_dir: ./packages/backend/app
+    volumes:
+      - ./packages/backend:/app
+      - ./packages/backend/app/node_modules # コンテナ内node_modulesをホストのファイルシステムから分離
+    ports:
+      - "9940:9940" # host → container のマッピング
+    command: /bin/sh -c "pnpm i && pnpm run dev"
