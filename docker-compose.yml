@@ -1,3 +1,9 @@
+## working_dir
+# - コンテナ内での作業ディレクトリを指定
+# - コンテナ内でコマンドを実行する際の「カレントディレクトリ」
+#   - 例えば、command で実行されるシェルコマンドは working_dir で指定したディレクトリを基準に動作
+##
+
 ## volumes
 # - ホストとコンテナ間でファイルやディレクトリを共有したり、コンテナ内に永続的なデータ領域を作ったりするための仕組み
 # - ホスト側の packages/backend ディレクトリ全体を、コンテナ内の /app にマウント
@@ -6,10 +12,10 @@
 #   - 双方向同期: コンテナ内での変更(生成ファイルなど)も、ホスト側に反映される
 ##
 
-## working_dir
-# - コンテナ内での作業ディレクトリを指定
-# - コンテナ内でコマンドを実行する際の「カレントディレクトリ」
-#   - 例えば、command で実行されるシェルコマンドは working_dir で指定したディレクトリを基準に動作
+## ports
+# - ホストとコンテナ間でポートをマッピングするための仕組み
+#   - ホスト側で localhost:9940 にアクセスすると、そのリクエストはコンテナ側の 9940 ポートに転送される
+#   - つまり、ホスト側で localhost:9940 にアクセスすると、コンテナ内のサーバーにアクセスできる
 ##
 
 ## command
@@ -29,10 +35,10 @@ services:
   backend:
     # build: packages/backend  # packages/backendのDockerfileを使ってイメージをビルド
     image: node:20
-    working_dir: ./packages/backend/app
+    working_dir: /app
     volumes:
       - ./packages/backend:/app
-      - ./packages/backend/app/node_modules # コンテナ内node_modulesをホストのファイルシステムから分離
+      - /app/node_modules # コンテナ内node_modulesをホストのファイルシステムから分離
     ports:
-      - "9940:9940" # host → container のマッピング
+      - "3002:3002" # host → container のマッピング
     command: /bin/sh -c "pnpm i && pnpm run dev"
