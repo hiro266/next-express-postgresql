@@ -13,3 +13,17 @@
 ### コンテナ
 
 - `docker compose up -d`
+
+## seed
+
+- `docker compose exec backend bash`
+- `npx prisma db push`
+  - schema.prisma で定義した model を db のテーブルとして作成
+- `npx prisma db seed`
+  - package.json の prisma seed を実行
+
+## メモ
+
+- `npx prisma generate`
+  - schema.prisma に則った `@prisma/client` を生成
+  - PrismaClient の初期化後に prisma.xxxx で model にアクセス

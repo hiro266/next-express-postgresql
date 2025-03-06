@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import { PrismaClient } from "@prisma/client";
 
 const app = express();
 app.use(
@@ -14,6 +15,12 @@ app.use("/hello", (req, res) => {
   // res.send("helloworld");
   console.log("/hello へリクエストがありました");
   res.json({ message: "helloworld" });
+});
+
+app.use("/user", async (req, res) => {
+  const prisma = new PrismaClient();
+  const user = await prisma.user.findFirst();
+  res.json(user?.name);
 });
 
 // port:3002でサーバーを立てる
