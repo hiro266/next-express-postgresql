@@ -44,3 +44,25 @@ services:
     ports:
       - "3002:3002"
     command: /bin/sh -c "npm install -g pnpm && pnpm i && pnpm run dev"
+    depends_on:
+      db:
+        condition: service_healthy # db の起動が完了するまで待つ
+
+  db:
+    image: postgres:latest
+    container_name: db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - db_volume:/var/lib/postgresql/data # データを永続化
+
+volumes:
+  db_volume:
