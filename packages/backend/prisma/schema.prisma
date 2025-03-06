@@ -4,8 +4,10 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// Prisma Client はMac(darwin-arm64)上で生成されたが、実際の実行環境は(Linuxlinux-arm64-openssl-3.0.x)のため実行時に必要なバイナリが見つからなかった
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-3.0.x"]
 }
 
 datasource db {
