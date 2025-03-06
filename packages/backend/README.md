@@ -4,5 +4,12 @@
 
 ## 起動
 
+### 手動
+
 - `pnpm build`
 - `pnpm start`
+- ソースコード変更のたびに上記を実行
+
+### コンテナ
+
+- `docker compose up -d`
